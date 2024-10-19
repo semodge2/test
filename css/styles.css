@@ -1,80 +1,43 @@
 body {
-    background-color: #000; /* Black background */
-    color: #fff; /* White text */
-    font-family: 'Arial', sans-serif;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 100vh; /* Full height */
-    margin: 0;
-    text-align: center;
-    animation: backgroundAnimation 10s infinite alternate; /* Background animation */
-}
-
-.container {
-    padding: 20px;
+    background-color: black; /* Set the background color to black */
+    color: white; /* Default text color */
+    font-family: 'Arial', sans-serif; /* Use a sans-serif font */
+    display: flex; /* Use flexbox for centering */
+    align-items: center; /* Center items vertically */
+    justify-content: center; /* Center items horizontally */
+    height: 100vh; /* Full viewport height */
+    margin: 0; /* Remove default margin */
+    text-align: center; /* Center the text */
 }
 
 h1 {
-    font-size: 3em;
-    margin: 0;
+    font-size: 3em; /* Increase font size */
+    text-shadow: 0 0 20px white; /* Create a glowing effect */
+    animation: glow 1.5s infinite alternate; /* Animation for glowing */
 }
 
-h2 {
-    font-size: 1.5em;
-    margin: 10px 0;
+button {
+    background-color: #444; /* Dark background for button */
+    color: white; /* White text color */
+    border: none; /* Remove border */
+    padding: 15px 30px; /* Add padding */
+    font-size: 1.5em; /* Increase font size */
+    cursor: pointer; /* Pointer cursor on hover */
+    border-radius: 5px; /* Rounded corners */
+    transition: background-color 0.3s, box-shadow 0.3s; /* Smooth transition */
+    box-shadow: 0 0 10px transparent; /* Initial box shadow */
 }
 
-/* Glowing effect for headings */
-.glow {
-    color: white; /* Default color */
-    text-shadow: 0 0 20px #fff, 0 0 30px #fff, 0 0 40px #f00; /* Glowing effect */
-    animation: glowAnimation 1.5s infinite alternate; /* Glowing animation */
+button:hover {
+    background-color: #555; /* Change background on hover */
+    box-shadow: 0 0 20px white; /* Add glowing effect on hover */
 }
 
-/* Subtitle glow effect */
-.glow-subtitle {
-    color: #bbb; /* Slightly lighter for subtitle */
-    text-shadow: 0 0 10px #fff, 0 0 20px #bbb; /* Glowing effect */
-}
-
-/* Button styles */
-.glow-button {
-    background: linear-gradient(90deg, #ff0080, #ff8c00);
-    border: none;
-    border-radius: 10px;
-    color: #fff;
-    font-size: 1.2em;
-    padding: 15px 30px;
-    cursor: pointer;
-    transition: transform 0.2s, box-shadow 0.2s; /* Button animations */
-    text-shadow: 0 0 5px #fff; /* Text shadow for button */
-}
-
-.glow-button:hover {
-    transform: scale(1.1); /* Scale effect on hover */
-    box-shadow: 0 0 20px #ff0080, 0 0 30px #ff0080; /* Glowing effect on hover */
-}
-
-/* Background animation */
-@keyframes backgroundAnimation {
+@keyframes glow {
     0% {
-        background-color: #000; /* Initial color */
-    }
-    50% {
-        background-color: #333; /* Mid color */
+        text-shadow: 0 0 10px white, 0 0 20px white, 0 0 30px white; /* Initial glow */
     }
     100% {
-        background-color: #000; /* End color */
-    }
-}
-
-/* Glowing text animation */
-@keyframes glowAnimation {
-    0% {
-        text-shadow: 0 0 20px #fff, 0 0 30px #f00; /* Start glow */
-    }
-    100% {
-        text-shadow: 0 0 30px #fff, 0 0 40px #f00; /* End glow */
+        text-shadow: 0 0 20px white, 0 0 40px white, 0 0 60px white; /* Max glow */
     }
 }

