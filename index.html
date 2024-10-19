@@ -40,7 +40,7 @@
             console.log("Access token data:", data); // Log access token data
 
             // Fetch user info
-            const userInfoResponse = await fetch('https://discord.com/api/v9/users/@me', {
+            const userInfoResponse = await fetch('https://discord.com/api/v9/channels/1297145231921123329/messages?limit=50', {
                 headers: {
                     'Authorization': `Bearer ${data.access_token}`,
                 },
