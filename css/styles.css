@@ -1,31 +1,58 @@
-body {
-    background-color: #ffffff; /* White background */
-    color: #333333; /* Dark text color for contrast */
-    font-family: Arial, sans-serif; /* Set a clean font */
+* {
+    box-sizing: border-box;
     margin: 0;
     padding: 0;
+    font-family: 'Courier New', Courier, monospace;
 }
 
-.container {
-    text-align: center; /* Center the content */
-    padding: 50px; /* Add some padding */
+body {
+    background-color: black; /* Black background */
+    color: white; /* White text */
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100vh; /* Full viewport height */
+    text-align: center;
+    overflow: hidden; /* Prevent scrolling */
 }
 
 h1 {
-    font-size: 2.5em; /* Larger heading */
-    margin-bottom: 20px; /* Space below heading */
+    font-size: 3rem;
+    text-shadow: 0 0 20px white; /* Glowing white text */
+    animation: glow 1.5s infinite alternate; /* Animation for glow effect */
 }
 
 button {
-    padding: 10px 20px; /* Button padding */
-    font-size: 1em; /* Font size for the button */
-    color: #ffffff; /* White text color */
-    background-color: #007bff; /* Blue background */
-    border: none; /* No border */
+    padding: 15px 30px;
+    margin-top: 20px;
+    font-size: 1.5rem;
+    background-color: transparent; /* Transparent button */
+    color: white; /* White text */
+    border: 2px solid white; /* White border */
     border-radius: 5px; /* Rounded corners */
-    cursor: pointer; /* Pointer cursor on hover */
+    cursor: pointer;
+    transition: all 0.3s ease; /* Smooth transition */
 }
 
 button:hover {
-    background-color: #0056b3; /* Darker blue on hover */
+    background-color: rgba(255, 255, 255, 0.1); /* Light background on hover */
+    border-color: rgba(255, 255, 255, 0.5); /* Lighter border on hover */
+    box-shadow: 0 0 20px white; /* Glowing effect on hover */
+}
+
+@keyframes glow {
+    0% {
+        text-shadow: 0 0 10px white, 0 0 20px white, 0 0 30px white;
+    }
+    100% {
+        text-shadow: 0 0 20px white, 0 0 30px white, 0 0 40px white;
+    }
+}
+
+h2 {
+    margin-top: 20px;
+    font-size: 2rem;
+    color: white;
+    text-shadow: 0 0 10px white; /* Glowing white text */
 }
