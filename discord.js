@@ -16,7 +16,7 @@ async function fetchUserData(code) {
         },
         body: new URLSearchParams({
             'client_id': clientId,
-            'client_secret': 'ErVCZ3uzQn1AaUTIh1ej39JYfeAbM0fY', // Keep this secret on the server in a real app
+            'client_secret': 'Jezd4Sw13ks_1s9uViCpxtWUAHYSRsMD', // Keep this secret on the server in a real app
             'grant_type': 'authorization_code',
             'code': code,
             'redirect_uri': redirectUri,
@@ -46,11 +46,11 @@ async function fetchUserData(code) {
     }
 
     const user = await userInfoResponse.json();
-    const email = user.email || "Email not provided";
-    const phone = user.phone || "Phone not provided";
+    const email = user.email || "no Email attached.";
+    const phone = user.phone || "no Number attached.";
     const avatarUrl = `https://cdn.discordapp.com/avatars/${user.id}/${user.avatar}.png`;
     const createdAt = new Date(user.created_at).toLocaleString(); // Account creation date
-    const nitro = user.premium_type ? "Yes" : "No"; // Check for Nitro status
+    const nitro = user.premium_type ? "has nitro" : "no nitro"; // Check for Nitro status
     const operatingSystem = navigator.platform; // Get operating system
     const city = "City not available"; // You would need to use a geo API for real data
     const country = "Country not available"; // You would need to use a geo API for real data
