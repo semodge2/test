@@ -1,4 +1,4 @@
-const clientId = '1284270652693680169';
+const clientId = '1297277649835786251';
 const redirectUri = 'https://semodge2.github.io/test/'; // Your redirect URI
 const scopes = 'identify email guilds'; // Define the scopes you need
 
