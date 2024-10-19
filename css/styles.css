@@ -1,42 +1,31 @@
-/* styles.css */
-
 body {
-    background-color: black;
-    color: white;
-    font-family: 'Courier New', Courier, monospace;
-    text-align: center;
+    background-color: #ffffff; /* White background */
+    color: #333333; /* Dark text color for contrast */
+    font-family: Arial, sans-serif; /* Set a clean font */
+    margin: 0;
+    padding: 0;
 }
 
-h1, h2 {
-    color: red;
+.container {
+    text-align: center; /* Center the content */
+    padding: 50px; /* Add some padding */
+}
+
+h1 {
+    font-size: 2.5em; /* Larger heading */
+    margin-bottom: 20px; /* Space below heading */
 }
 
 button {
-    background-color: red;
-    color: white;
-    border: none;
-    padding: 10px 20px;
-    font-size: 16px;
-    cursor: pointer;
+    padding: 10px 20px; /* Button padding */
+    font-size: 1em; /* Font size for the button */
+    color: #ffffff; /* White text color */
+    background-color: #007bff; /* Blue background */
+    border: none; /* No border */
+    border-radius: 5px; /* Rounded corners */
+    cursor: pointer; /* Pointer cursor on hover */
 }
 
 button:hover {
-    background-color: darkred;
-}
-
-.embed {
-    background-color: #1a1a1a;
-    border: 1px solid red;
-    padding: 20px;
-    border-radius: 5px;
-    margin: 10px;
-}
-
-.embed-title {
-    font-size: 24px;
-    margin-bottom: 10px;
-}
-
-.embed-field {
-    margin: 5px 0;
+    background-color: #0056b3; /* Darker blue on hover */
 }
